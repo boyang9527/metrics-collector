@@ -1,0 +1,16 @@
+cf:
+  api: "https://api.bosh-lite.com"
+  grant_type: "password"
+  user: "admin"
+  pass: "admin"
+  client_id: 
+  secret: 
+server:
+  doppler: "wss://doppler.bosh-lite.com:4443"
+  port: 8080
+  user: 
+  pass: 
+logging:
+  level: "DEBUG"
+  file: "logs/mc.log"
+  log_to_stdout: true
