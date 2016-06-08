@@ -8,9 +8,11 @@ import (
 	"path/filepath"
 )
 
-var Logger = lager.NewLogger("as-metrics-collector")
+const DEFAULT_LOG_LEVEL = lager.INFO
 
-func getLogLevel(level string) lager.LogLevel {
+var Logger lager.Logger
+
+func GetLogLevel(level string) lager.LogLevel {
 	switch level {
 	case "DEBUG":
 		return lager.DEBUG
@@ -22,42 +24,40 @@ func getLogLevel(level string) lager.LogLevel {
 		return lager.FATAL
 
 	default:
-		return lager.INFO
+		return DEFAULT_LOG_LEVEL
 	}
 }
 
-func InitailizeLogger(c *config.LoggingConfig) {
-
-	logLevel := getLogLevel(c.Level)
+func InitailizeLogger(c *config.LoggingConfig) (err error) {
+	Logger = lager.NewLogger("as-metrics-collector")
+	logLevel := GetLogLevel(c.Level)
 
 	if c.LogToStdout {
 		Logger.RegisterSink(lager.NewWriterSink(os.Stdout, logLevel))
 	}
 
 	if c.File != "" {
+		var info os.FileInfo
 		var file *os.File
 
-		info, err := os.Stat(c.File)
+		info, err = os.Stat(c.File)
+
 		if err == nil {
 			if info.IsDir() {
-				fmt.Fprintf(os.Stderr, "log file '%s' is a directory\n", c.File)
-				os.Exit(1)
+				err = fmt.Errorf("log file '%s' is a directory\n", c.File)
+			} else {
+				file, err = os.OpenFile(c.File, os.O_APPEND|os.O_RDWR, 0644)
 			}
-
-			file, err = os.OpenFile(c.File, os.O_APPEND|os.O_RDWR, 0644)
-
 		} else {
-
 			err = os.MkdirAll(filepath.Dir(c.File), 0744)
 			if err == nil {
 				file, err = os.Create(c.File)
 			}
 		}
 
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to create log file %s \n", err.Error())
-			os.Exit(1)
+		if err == nil {
+			Logger.RegisterSink(lager.NewWriterSink(file, logLevel))
 		}
-		Logger.RegisterSink(lager.NewWriterSink(file, logLevel))
 	}
+	return
 }

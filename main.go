@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/config"
 	"github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/security"
 	"github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/server"
@@ -10,20 +11,32 @@ import (
 )
 
 func main() {
-	var configFile string
-	flag.StringVar(&configFile, "c", "", "Configuration File")
+	var path string
+	flag.StringVar(&path, "c", "", "configuration file")
 	flag.Parse()
 
 	var conf *config.Config
-	if configFile == "" {
+	var err error
+
+	if path == "" {
 		conf = config.DefaultConfig()
 	} else {
-		conf = config.LoadConfigFromFile(configFile)
+		conf, err = config.LoadConfigFromFile(path)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to read config file: %s\n", err.Error())
+			os.Exit(1)
+		}
 	}
 
-	InitailizeLogger(&conf.Logging)
+	fmt.Println(conf.ToString())
 
-	err := security.Login(&conf.Cf)
+	err = InitailizeLogger(&conf.Logging)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to intialize logger: %s\n", err.Error())
+		os.Exit(1)
+	}
+
+	err = security.Login(&conf.Cf)
 	if err != nil {
 		Logger.Error("failed-to-login-cloudfoundry", err)
 		os.Exit(1)

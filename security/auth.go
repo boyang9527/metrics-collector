@@ -5,14 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/config"
-	"github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/util"
+	. "github.com/cloudfoundry-incubator/app-autoscaler/metrics-collector/util"
 	"io/ioutil"
 	"net/url"
 	"strings"
 )
-
-const CC_INFO_PATH = "/v2/info"
-const AUTH_PATH = "/oauth/token"
 
 type Tokens struct {
 	AccessToken  string `json:"access_token"`
@@ -25,14 +22,14 @@ type EndPoints struct {
 	TokenEndpoint string `json:"token_endpoint"`
 }
 
-var tokens = Tokens{}
+var cfTokens *Tokens
 
 //
 // get the Authorization and Token endpoints from API endpoint
 //
-func getEndPoints(api string) (*EndPoints, error) {
-	url := api + CC_INFO_PATH
-	resp, err := util.DoRequest("GET", url, "", nil, nil)
+func GetEndPoints(api string) (*EndPoints, error) {
+	url := api + CF_INFO_PATH
+	resp, err := DoRequest("GET", url, "", nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -62,12 +59,14 @@ func getEndPoints(api string) (*EndPoints, error) {
 //
 
 func Login(c *config.CfConfig) error {
-	endpoints, err := getEndPoints(c.Api)
+	cfTokens = &Tokens{}
+
+	endpoints, err := GetEndPoints(c.Api)
 	if err != nil {
 		return err
 	}
 
-	authUrl := endpoints.AuthEndpoint + AUTH_PATH
+	authUrl := endpoints.AuthEndpoint + CF_AUTH_PATH
 	grantType := strings.ToLower(c.GrantType)
 
 	var form url.Values
@@ -99,7 +98,7 @@ func Login(c *config.CfConfig) error {
 		token = "Basic " + base64.StdEncoding.EncodeToString([]byte(token))
 	}
 
-	resp, err := util.DoRequest("POST", authUrl, token, headers, strings.NewReader(form.Encode()))
+	resp, err := DoRequest("POST", authUrl, token, headers, strings.NewReader(form.Encode()))
 
 	if err != nil {
 		return err
@@ -115,11 +114,10 @@ func Login(c *config.CfConfig) error {
 		return errors.New("Error get oauth tokens: failed to read auth response body " + err.Error())
 	}
 
-	err = json.Unmarshal(body, &tokens)
-
+	err = json.Unmarshal(body, cfTokens)
 	return err
 }
 
 func GetOAuthToken() string {
-	return tokens.AccessToken
+	return cfTokens.AccessToken
 }

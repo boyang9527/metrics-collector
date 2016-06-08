@@ -32,10 +32,12 @@ type InstanceMetric struct {
 func GetMemoryMetricFromContainerMetrics(appId string, containerMetrics []*events.ContainerMetric) Metric {
 	insts := []InstanceMetric{}
 	for _, cm := range containerMetrics {
-		insts = append(insts, InstanceMetric{
-			Index: *cm.InstanceIndex,
-			Value: fmt.Sprintf("%d", cm.GetMemoryBytes()),
-		})
+		if *cm.ApplicationId == appId {
+			insts = append(insts, InstanceMetric{
+				Index: cm.GetInstanceIndex(),
+				Value: fmt.Sprintf("%d", cm.GetMemoryBytes()),
+			})
+		}
 	}
 
 	return Metric{

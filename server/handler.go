@@ -42,6 +42,7 @@ func (h *Handler) GetMemoryMetric(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	w.WriteHeader(http.StatusInternalServerError)
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(CreateJsonErrorResponse("Error-Get-Metrics-From-Doppler", err.Error()))
 
 	Logger.Error("failed-to-get-memory-metric", err)

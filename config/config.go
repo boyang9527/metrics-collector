@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/cloudfoundry-incubator/candiedyaml"
 	"io/ioutil"
-	"os"
 )
 
 type CfConfig struct {
@@ -34,7 +33,7 @@ type ServerConfig struct {
 
 var defaultServerConfig = ServerConfig{
 	Doppler: "wss://doppler.bosh-lite.com:4443",
-	Port:    8443,
+	Port:    8080,
 	User:    "",
 	Pass:    "",
 }
@@ -67,22 +66,18 @@ func DefaultConfig() *Config {
 	return &c
 }
 
-func LoadConfigFromFile(path string) *Config {
-	var c *Config = DefaultConfig()
-	var e error
-
+func LoadConfigFromFile(path string) (c *Config, e error) {
 	b, e := ioutil.ReadFile(path)
-	if e != nil {
-		fmt.Fprintf(os.Stderr, "Failed to read config file '%s' : %s\n", path, e.Error())
-		os.Exit(1)
+	if e == nil {
+		return LoadConfigFromYaml(b)
 	}
+	return nil, e
+}
 
+func LoadConfigFromYaml(b []byte) (c *Config, e error) {
+	c = DefaultConfig()
 	e = candiedyaml.Unmarshal(b, c)
-	if e != nil {
-		fmt.Fprintf(os.Stderr, "Failed to parse config file '%s' : %s\n", path, e.Error())
-		os.Exit(1)
-	}
-	return c
+	return
 }
 
 func (c *Config) ToString() (s string, e error) {

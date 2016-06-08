@@ -3,13 +3,11 @@ cf:
   grant_type: "password"
   user: "admin"
   pass: "admin"
-  client_id: 
-  secret: 
+  client_id: "admin"
+  secret: "admin-secret"
 server:
   doppler: "wss://doppler.bosh-lite.com:4443"
   port: 8080
-  user: 
-  pass: 
 logging:
   level: "DEBUG"
   file: "logs/mc.log"
