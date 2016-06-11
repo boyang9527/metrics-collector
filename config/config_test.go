@@ -18,7 +18,6 @@ cf:
   grant-type: "password"
   user: "admin"
 server:
-  doppler: "wss://doppler.bosh-lite.com:4443"
   port: "port"
   user: "user"
   pass: "password"
@@ -45,7 +44,6 @@ cf:
   client_id: "client-id"
   secret: "client-secret"
 server:
-  doppler: "wss://doppler.bosh-lite.com:4443"
   port: 8080
   user: "user"
   pass: "password"
@@ -67,7 +65,6 @@ logging:
 				Expect(conf.Cf.ClientId).To(Equal("client-id"))
 				Expect(conf.Cf.Secret).To(Equal("client-secret"))
 
-				Expect(conf.Server.Doppler).To(Equal("wss://doppler.bosh-lite.com:4443"))
 				Expect(conf.Server.Port).To(Equal(8080))
 				Expect(conf.Server.User).To(Equal("user"))
 				Expect(conf.Server.Pass).To(Equal("password"))
@@ -86,7 +83,6 @@ cf:
   user: "admin"
   pass: "admin"
 server:
-  doppler: "wss://doppler.bosh-lite.com:4443"
   user: "user"
   pass: "password"
 logging:
@@ -106,7 +102,6 @@ logging:
 				Expect(conf.Cf.ClientId).To(Equal(defaultConfig.Cf.ClientId))
 				Expect(conf.Cf.Secret).To(Equal(defaultConfig.Cf.Secret))
 
-				Expect(conf.Server.Doppler).To(Equal("wss://doppler.bosh-lite.com:4443"))
 				Expect(conf.Server.Port).To(Equal(defaultConfig.Server.Port))
 				Expect(conf.Server.User).To(Equal("user"))
 				Expect(conf.Server.Pass).To(Equal("password"))
@@ -145,7 +140,6 @@ cf:
   client_id: "client-id"
   secret: "client-secret"
 server:
-  doppler: "wss://doppler.bosh-lite.com:4443"
   port: 8080
   user: "user"
   pass: "password"

@@ -25,17 +25,15 @@ var defaultCfConfig = CfConfig{
 }
 
 type ServerConfig struct {
-	Doppler string `yaml:"doppler"`
-	Port    int    `yaml:"port"`
-	User    string `yaml:"user"`
-	Pass    string `yaml:"pass"`
+	Port int    `yaml:"port"`
+	User string `yaml:"user"`
+	Pass string `yaml:"pass"`
 }
 
 var defaultServerConfig = ServerConfig{
-	Doppler: "wss://doppler.bosh-lite.com:4443",
-	Port:    8080,
-	User:    "",
-	Pass:    "",
+	Port: 8080,
+	User: "",
+	Pass: "",
 }
 
 type LoggingConfig struct {

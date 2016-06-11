@@ -6,6 +6,7 @@ import (
 	"github.com/pivotal-golang/lager"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const DEFAULT_LOG_LEVEL = lager.INFO
@@ -13,7 +14,7 @@ const DEFAULT_LOG_LEVEL = lager.INFO
 var Logger lager.Logger
 
 func GetLogLevel(level string) lager.LogLevel {
-	switch level {
+	switch strings.ToUpper(level) {
 	case "DEBUG":
 		return lager.DEBUG
 	case "INFO":
@@ -22,7 +23,6 @@ func GetLogLevel(level string) lager.LogLevel {
 		return lager.ERROR
 	case "FATAL":
 		return lager.FATAL
-
 	default:
 		return DEFAULT_LOG_LEVEL
 	}

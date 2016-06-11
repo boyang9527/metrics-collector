@@ -6,9 +6,8 @@ cf:
   client_id: "admin"
   secret: "admin-secret"
 server:
-  doppler: "wss://doppler.bosh-lite.com:4443"
   port: 8080
 logging:
-  level: "DEBUG"
+  level: "info"
   file: "logs/mc.log"
   log_to_stdout: true

@@ -18,6 +18,12 @@ var _ = Describe("Logger", func() {
 			Expect(GetLogLevel("INFO")).To(Equal(lager.INFO))
 			Expect(GetLogLevel("ERROR")).To(Equal(lager.ERROR))
 			Expect(GetLogLevel("FATAL")).To(Equal(lager.FATAL))
+
+			Expect(GetLogLevel("DEbuG")).To(Equal(lager.DEBUG))
+			Expect(GetLogLevel("info")).To(Equal(lager.INFO))
+			Expect(GetLogLevel("ErROr")).To(Equal(lager.ERROR))
+			Expect(GetLogLevel("FaTal")).To(Equal(lager.FATAL))
+
 			Expect(GetLogLevel("NOT-EXIST")).To(Equal(DEFAULT_LOG_LEVEL))
 		})
 	})
