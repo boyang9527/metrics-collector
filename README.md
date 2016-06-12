@@ -1,15 +1,15 @@
 #Metrics-Collector
 
-Metrics-Collector is one of the components of CF `app-autoscaler`. It is used to collect application metrics from CF loggretator. The current version only support memory metrics, it will be extended to include other metrics like throughput and response time. 
+Metrics-Collector is one of the components of CF `app-autoscaler`. It is used to collect application metrics from CF loggretator. The current version only supports memory metrics, it will be extended to include other metrics like throughput and response time at a later time. 
 
 ## Getting started
 
-###System requirements:
+### System requirements:
 
 * Go 1.5 or above
 * Cloud Foundry relese 235 or later
 
-### build and test
+### Build and test
 
 1. Create a directory where you would like to store the source for Go projects and their binaries 
 2. Add this directory to your `$GOPAHT`
@@ -20,7 +20,7 @@ Metrics-Collector is one of the components of CF `app-autoscaler`. It is used to
 6. build the project: `go build -o out/mc`
 7. test the project: `ginkgo -r`
 
-### run the metrics-collector
+### Run the metrics-collector
 
 Firstly a configuration file needs to be created. Examples can be found under `example-config` directory. Here is an example:
 
@@ -41,7 +41,7 @@ logging:
 
 The config parameters are explained as below
 
-* `cf` : cloudfoundry config
+* cf : cloudfoundry config
  * `api`: API endpoint of cloudfoundry
  * `grant_type`: the grant type when you login into coud foundry, can be "password" or "client_credentials"
  * `user`: the user name when using password grant to login cloudfoundry
@@ -49,11 +49,11 @@ The config parameters are explained as below
  * `client_id`: the client id when using client_credentials grant to login cloudfoundry
  * `secret`: the client secret when using client_credentials grant to login cloudfoundry
 * server: API sever config
- * `port`: 8080 - the port API sever will use
-* `logging`
- * level: the level of logging, can be 'debug', 'info', 'error' and 'fatal'
- * file:  the log file name, "" means not log to file
- * log_to_stdout: whehter show logs to stdout
+ * `port`: the port API sever will listen to
+* logging: config for logging
+ * `level`: the level of logging, can be 'debug', 'info', 'error' or 'fatal'
+ * `file`:  the log file name, "" means not log to file
+ * `log_to_stdout`: whether log to stdout
 
 
 To run the metrics-collector, use `./out/mc -c config_file_name'
@@ -64,7 +64,7 @@ Metrics Collector exposes the following APIs for other CF App-Autoscaler compone
 
 | PATH                      | METHOD  | Description                              |
 |---------------------------|---------|------------------------------------------|
-| /v1/apps/{appid}/metrics/memory | GET | Get the latest memroy metric for an application |
+| /v1/apps/{appid}/metrics/memory | GET | Get the latest memroy metric of an application |
 
 
 
